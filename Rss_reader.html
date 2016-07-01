@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8">
+    <title>Handlebars Demo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.js"></script>
+  </head>
+  <body>
+  
+    <div class="page-header">
+      <h1>Новини</h1>
+    </div>
+    
+    <script id="rss-list" type="text/x-handlebars-template">
+      {{#if channels}}
+        <table class="table table-striped">
+          <tbody>
+            {{#each channels}}
+                <tr onclick="show({{{json this}}})">
+                  <td >{{channelName}}</td>
+                </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <p>Перелик каналов новин ее визначено!</p>  
+      {{/if}}
+    </script>
+    
+    <script id="news-list" type="text/x-handlebars-template">
+      {{#if entries}}
+        {{#each entries}}
+          <div class="panel panel-default"
+            <div class="panel-body">
+              <div>{{author}}</div>
+              <div>{{publishedDate}}</div>
+              <a href="{{link}}" target="_blank">{{title}}</a>
+              <div>{{content}}</div>
+            </div>
+          </div>
+        {{/each}}
+      {{else}}
+          <p>Новини не завантажено!</p>  
+      {{/if}}
+    </script>
+    
+    <div id="cannelList" class="col-sm-3"></div>
+    <div id="cannelContent" class="col-sm-9"></div>
+    
+    <script>
+    'use strict';
+      //<input type="Button" value="Показати" onclick="show({{{json this}}})"></input>
+      Handlebars.registerHelper('json', function(context) {
+        return JSON.stringify(context).replace(/"/g, '&quot;');
+      });
+            
+      window.onload = function () {
+        //var source   = $("#some-template").html();
+        var source = document.getElementById("rss-list").innerHTML;
+        var template = Handlebars.compile(source);
+        
+        var data = { channels: [
+            {channelName: "ЦензорНЕТ", channelUrl: "http://censor.net.ua/includes/news_ru.xml"},
+            {channelName: "Українська правда", channelUrl: "http://www.pravda.com.ua/rus/rss"},
+            {channelName: "Новая газета", channelUrl: "http://www.novayagazeta.ru/rss/all.xml"},
+            {channelName: "Независимая газета", channelUrl: "http://www.ng.ru/rss/"}
+            //{channelName: "", channelUrl: ""},
+            //{channelName: "", channelUrl: ""},
+            //{channelName: "", channelUrl: ""},
+            //{channelName: "", channelUrl: ""},
+            //{channelName: "", channelUrl: ""}
+          ]};
+        //$(document.body).append(template(data));
+        var cannelList = document.getElementById("cannelList");
+        cannelList.innerHTML = template(data);
+      };
+      
+      function show (channel) {
+      
+      /*
+      $.get(channel.channelUrl, function (data) {
+        console.log(data);
+        $(data).find("entry").each(function () { // or "item" or whatever suits your feed
+          var el = $(this);
+          console.log("------------------------");
+          console.log("title      : " + el.find("title").text());
+          console.log("author     : " + el.find("author").text());
+          console.log("description: " + el.find("description").text());
+        });
+      });
+      
+      
+      $.ajax(channel.channelUrl, {
+        accepts:{
+            xml:"application/rss+xml"
+        },
+        dataType:"xml",
+        success:function(data) {
+            $(data).find("item").each(function () { // or "item" or whatever suits your feed
+                var el = $(this);
+                console.log("------------------------");
+                console.log("title      : " + el.find("title").text());
+                console.log("link       : " + el.find("link").text());
+                console.log("description: " + el.find("description").text());
+            });
+        }   
+      });
+      
+      document.domain = 'censor.net.ua';
+      
+      $.getJSON(channel.channelUrl, function(data) {
+       // Get the element with id summary and set the inner text to the result.
+          //$('#summary').text(data.result);
+          console.log(data.result);
+      });
+      
+      */
+        //console.log(channel);
+
+        
+        $.ajax({
+          //url      : document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=10&callback=?&q=' + encodeURIComponent(channel.channelUrl),
+          url      : 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=10&callback=?&q=' + encodeURIComponent(channel.channelUrl),
+          dataType : 'json',
+          success  : function (data) {
+            if (data.responseData.feed && data.responseData.feed.entries) {
+              var source = document.getElementById("news-list").innerHTML;
+              var template = Handlebars.compile(source);
+              var feeds = data.responseData.feed;
+              console.log(feeds);
+              var cannelContent = document.getElementById("cannelContent");
+              cannelContent.innerHTML = template(feeds);
+              
+              /*
+              $.each(data.responseData.feed.entries, function (i, e) {
+                console.log("------------------------");
+                //console.log(e);
+                //console.log("------------------------");
+                console.log("title      : " + e.title);
+                console.log("author     : " + e.author);
+                console.log("description: " + e.description);
+              });
+              */
+            }
+          }
+        });
+      };
+    </script>
+    
+  </body>
+</html>
+
+
