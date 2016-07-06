@@ -48,7 +48,8 @@
           <div class="panel panel-default">
             <div class="panel-body">
               <!--div>{{publishedDate}} {{localTime publishedDate}}</div-->
-              <div>{{localTime publishedDate}}</div>
+              <!--div><strong>{{../title}}</strong> {{localTime publishedDate}}</div-->
+              <div><strong>{{../channelName}}</strong> {{localTime publishedDate}}</div>
               {{#if author}}
                 <div>
                   <strong>Автор: </strong>{{author}}
@@ -86,7 +87,6 @@
         //console.log("itemTime - " + itemTime);
         //console.log("utcTime - " + utcTime);
         //console.log("LocaleDateString - " + itemTime.toLocaleDateString());
-        
         //return itemTime.toISOString();
         return itemTime.toLocaleDateString() + " " + itemTime.toLocaleTimeString();
       });
@@ -97,7 +97,7 @@
         var template = Handlebars.compile(source);
         
         var data = { channels: [
-        //Тут редактируем список каналов новостей.
+          //Тут редактируем список каналов новостей.
             {channelName: "ЦензорНЕТ", channelUrl: "http://censor.net.ua/includes/news_ru.xml"},
             {channelName: "Українська правда", channelUrl: "http://www.pravda.com.ua/rus/rss"},
             {channelName: "Новая газета", channelUrl: "http://www.novayagazeta.ru/rss/all.xml"},
@@ -109,6 +109,7 @@
             {channelName: "Подробности", channelUrl: "http://podrobnosti.ua/rss/feed/?category=all-news"},
             {channelName: "Сегодня UA", channelUrl: "http://www.segodnya.ua/xml/rss/specials.html"},
             //{channelName: "", channelUrl: ""},
+            {channelName: "Сноб", channelUrl: "https://snob.ru/rss/all"},
             {channelName: "UbuntuGeek", channelUrl: "http://feeds.feedburner.com/UbuntuGeek?format=xml"}
           ]};
         var cannelList = document.getElementById("cannelList");
@@ -151,13 +152,14 @@
 
         $.ajax({
           //url      : document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=10&callback=?&q=' + encodeURIComponent(channel.channelUrl),
-          url      : 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=10&callback=?&q=' + encodeURIComponent(channel.channelUrl),
+          url : 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=10&callback=?&q=' + encodeURIComponent(channel.channelUrl),
           dataType : 'json',
-          success  : function (data) {
+          success : function (data) {
             if (data.responseData.feed && data.responseData.feed.entries) {
               var source = document.getElementById("news-list").innerHTML;
               var template = Handlebars.compile(source);
               var feeds = data.responseData.feed;
+              feeds.channelName = channel.channelName;
               //console.log(feeds);
               var cannelContent = document.getElementById("cannelContent");
               cannelContent.innerHTML = template(feeds);
