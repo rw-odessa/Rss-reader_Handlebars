@@ -46,7 +46,7 @@
       {{#if entries}}
         {{#each entries}}
           <div class="panel panel-default">
-            <div class="panel-body">
+            <div class="panel-body" onclick="showItem('#content-{{@index}}')">
             <!--div class="panel-body" onclick="showItem(this, {{{json this}}})"-->
               <!--div>{{publishedDate}} {{localTime publishedDate}}</div-->
               <!--div><strong>{{../title}}</strong> {{localTime publishedDate}}</div-->
@@ -58,7 +58,10 @@
                 </div>
               {{/if}}
               <a href="{{link}}" target="_blank">{{title}}</a>
-              <div>{{{content}}}</div>
+              <!--div>{{{content}}}</div-->              
+              <!--div><input type="Button" value="Детальніше..." onclick="showItem('#content-{{@index}}')"></input></div-->
+              <div id="content-{{@index}}" style="display:none">{{{content}}}</div>
+              
             </div>
           </div>
         {{/each}}
@@ -103,11 +106,16 @@
         return itemTime.toLocaleDateString() + " " + itemTime.toLocaleTimeString();
       });
       
+      Handlebars.registerHelper('itemContent', function() {
+        var itemContent = '<div><input type="Button" value="Детальніше..." onclick="showItem(this, {{{json this}}})"></input></div>';
+        //$("input").parent().append(this.content);
+        return new Handlebars.SafeString(itemContent);
+      });
+      
       window.onload = function () {
         //var source   = $("#rss-list").html();
         var source = document.getElementById("rss-list").innerHTML;
         var template = Handlebars.compile(source);
-        
         var data = { channels: [
           //Тут редактируем список каналов новостей.
             {channelName: "ЦензорНЕТ", channelUrl: "http://censor.net.ua/includes/news_ru.xml"},
@@ -156,19 +164,35 @@
                 //console.log("offset: " + offset);
                 console.log(e.publishedDate + " " + utc_date.toISOString());
                 console.log("Time + 3600: " + Date.parse(e.publishedDate) + 3600);
+                console.log('Handlebars.templates - ' + JSON.stringify(Handlebars.templates));
               });
               */
+              
             }
           }
         });
       };
       
-      /*
-      function showItem (element, item) {
-        $(element).append(item.content);
-        //console.log(item);
+      
+      function showItem (id) {
+ 
+        //console.log($(id).is(':visible'));
+        //console.log($(id));
+        /*
+        if ($(id).is(':visible')) {
+          $(id).hide(150);
+        } else {
+          $(id).show(150);
+        }
+        */
+        var element = $(id);
+        if (element.is(':visible')) {
+          element.hide(150);
+        } else {
+          element.show(150);
+        }
       }
-      */
+      
     </script>
     
   </body>
