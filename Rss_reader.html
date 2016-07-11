@@ -57,7 +57,7 @@
                   <strong>Автор: </strong>{{author}}
                 </div>
               {{/if}}
-              <a href="{{link}}" target="_blank">{{title}}</a>
+              <a href="{{link}}" target="_blank" onclick="myEventHandler()">{{title}}</a>
               <!--div>{{{content}}}</div-->              
               <!--div><input type="Button" value="Детальніше..." onclick="showItem('#content-{{@index}}')"></input></div-->
               <div id="content-{{@index}}" style="display:none">{{{content}}}</div>
@@ -106,12 +106,6 @@
         return itemTime.toLocaleDateString() + " " + itemTime.toLocaleTimeString();
       });
       
-      Handlebars.registerHelper('itemContent', function() {
-        var itemContent = '<div><input type="Button" value="Детальніше..." onclick="showItem(this, {{{json this}}})"></input></div>';
-        //$("input").parent().append(this.content);
-        return new Handlebars.SafeString(itemContent);
-      });
-      
       window.onload = function () {
         //var source   = $("#rss-list").html();
         var source = document.getElementById("rss-list").innerHTML;
@@ -130,6 +124,7 @@
             {channelName: "Сегодня UA", channelUrl: "http://www.segodnya.ua/xml/rss/specials.html"},
             //{channelName: "", channelUrl: ""},
             {channelName: "Сноб", channelUrl: "https://snob.ru/rss/all"},
+            {channelName: "Коммерсант", channelUrl: "http://www.kommersant.ru/RSS/daily.xml"},
             {channelName: "UbuntuGeek", channelUrl: "http://feeds.feedburner.com/UbuntuGeek?format=xml"}
           ]};
         var cannelList = document.getElementById("cannelList");
@@ -191,6 +186,21 @@
         } else {
           element.show(150);
         }
+      }
+      
+      function myEventHandler(e)
+      {
+          if (!e)
+            e = window.event;
+
+          //IE9 & Other Browsers
+          if (e.stopPropagation) {
+            e.stopPropagation();
+          }
+          //IE8 and Lower
+          else {
+            e.cancelBubble = true;
+          }
       }
       
     </script>
