@@ -182,10 +182,16 @@
         */
         var element = $(id);
         if (element.is(':visible')) {
+          //$(window).scrollTop(element.parent().offset().top);
+          $('html, body').animate({
+              scrollTop: element.parent().offset().top
+          }, 150);
           element.hide(150);
         } else {
           element.show(150);
         }
+        //element.parent().focus();
+        //panel-body-{{@index}}
       }
       
       function myEventHandler(e)
