@@ -17,6 +17,12 @@
       a {
           font-size: 1.2em;
       }
+      a:visited {
+        color: green;
+      }
+      a:hover, td:hover {
+        background-color: lightblue;
+      }
     </style>
     
   </head>
@@ -145,6 +151,10 @@
               var cannelContent = document.getElementById("cannelContent");
               cannelContent.innerHTML = template(feeds);
               
+              $('html, body').animate({
+                scrollTop: ($("#cannelContent").offset().top - 6)
+              }, 300);
+              
               /*
               $.each(data.responseData.feed.entries, function (i, e) {
                 console.log("------------------------");
@@ -183,9 +193,19 @@
         var element = $(id);
         if (element.is(':visible')) {
           //$(window).scrollTop(element.parent().offset().top);
-          $('html, body').animate({
-              scrollTop: element.parent().offset().top
-          }, 150);
+          //var top_of_element = $("#element").offset().top;
+          //var bottom_of_element = $("#element").offset()top + $("#element").outerHeight;
+          //var bottom_of_screen = $(window).scrollTop() + $(window).height();
+          //if((bottom_of_screen > top_of_element) && (bottom_of_screen < bottom_of_element)){
+          
+          //console.log($(window).scrollTop());
+          //console.log(element.parent().offset().top);
+          
+          if ($(window).scrollTop() > element.parent().offset().top) {
+            $('html, body').animate({
+                scrollTop: (element.parent().offset().top - 6)
+            }, 150);
+          }
           element.hide(150);
         } else {
           element.show(150);
