@@ -15,7 +15,7 @@
         cursor: hand;
       }
       a {
-          font-size: 1.2em;
+        font-size: 1.2em;
       }
       a:visited {
         color: green;
@@ -76,11 +76,12 @@
       {{/if}}
     </script>
     
-    <div id="cannelList" class="col-sm-2"></div>
-    <div id="cannelContent" class="col-sm-10"></div>
+    <div id="channelList" class="col-sm-2"></div>
+    <div id="channelContent" class="col-sm-10"></div>
     
     <script>
     'use strict';
+    
       //<input type="Button" value="Показати" onclick="show({{{json this}}})"></input>
       Handlebars.registerHelper('json', function(context) {
         return JSON.stringify(context).replace(/"/g, '&quot;');
@@ -135,14 +136,14 @@
             {channelName: "Коммерсант", channelUrl: "http://www.kommersant.ru/RSS/daily.xml"},
             {channelName: "UbuntuGeek", channelUrl: "http://feeds.feedburner.com/UbuntuGeek?format=xml"}
           ]};
-        var cannelList = document.getElementById("cannelList");
-        cannelList.innerHTML = template(data);
+        var channelList = document.getElementById("channelList");
+        channelList.innerHTML = template(data);
       };
       
       function show (channel) {
         $("body").css("cursor", "progress");
         $.ajax({
-          url : 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=10&callback=?&q=' + encodeURIComponent(channel.channelUrl),
+          url : 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=50&callback=?&q=' + encodeURIComponent(channel.channelUrl),
           dataType : 'json',
           complete: function (xhr, textStatus) {
             //alert(xhr.status);
@@ -161,11 +162,11 @@
               var feeds = data.responseData.feed;
               feeds.channelName = channel.channelName;
               //console.log(feeds);
-              var cannelContent = document.getElementById("cannelContent");
-              cannelContent.innerHTML = template(feeds);
+              var channelContent = document.getElementById("channelContent");
+              channelContent.innerHTML = template(feeds);
               
               $('html, body').animate({
-                scrollTop: ($("#cannelContent").offset().top - 6)
+                scrollTop: ($("#channelContent").offset().top - 6)
               }, 300);
               
               /*
@@ -191,9 +192,7 @@
         });
       };
       
-      
       function showItem (id) {
- 
         //console.log($(id).is(':visible'));
         //console.log($(id));
         /*
