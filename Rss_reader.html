@@ -24,27 +24,20 @@
         background-color: lightblue;
       }
     </style>
-    
-  </head>
-  <body>
-  
-    <div class="page-header">
-      <h1>Новини</h1>
-    </div>
-    
+
     <script id="rss-list" type="text/x-handlebars-template">
       {{#if channels}}
         <table class="table table-striped">
           <tbody>
             {{#each channels}}
                 <tr onclick="show({{{json this}}})">
-                  <td >{{channelName}}</td>
+                  <td>{{channelName}}</td>
                 </tr>
             {{/each}}
           </tbody>
         </table>
       {{else}}
-        <p>Перелик каналов новин не визначено!</p>  
+        <p>Перелік каналов новин не визначено!</p>  
       {{/if}}
     </script>
     
@@ -67,17 +60,13 @@
               <!--div>{{{content}}}</div-->              
               <!--div><input type="Button" value="Детальніше..." onclick="showItem('#content-{{@index}}')"></input></div-->
               <div id="content-{{@index}}" style="display:none">{{{content}}}</div>
-              
             </div>
           </div>
         {{/each}}
       {{else}}
-          <p>Новини не завантажено!</p>  
+        <p>Новини не завантажено!</p>  
       {{/if}}
-    </script>
-    
-    <div id="channelList" class="col-sm-2"></div>
-    <div id="channelContent" class="col-sm-10"></div>
+    </script>    
     
     <script>
     'use strict';
@@ -242,7 +231,14 @@
       }
       
     </script>
-    
+
+  </head>
+  <body>
+    <div class="page-header">
+      <h1>Новини</h1>
+    </div>
+    <div id="channelList" class="col-sm-2"></div>
+    <div id="channelContent" class="col-sm-10"></div>
   </body>
 </html>
 
