@@ -56,9 +56,7 @@
                   <strong>Автор: </strong>{{author}}
                 </div>
               {{/if}}
-              <a href="{{link}}" target="_blank" onclick="myEventHandler()">{{title}}</a>
-              <!--div>{{{content}}}</div-->              
-              <!--div><input type="Button" value="Детальніше..." onclick="showItem('#content-{{@index}}')"></input></div-->
+              <a href="{{link}}" title="{{link}}" target="_blank" onclick="myEventHandler()">{{title}}</a>
               <div id="content-{{@index}}" style="display:none">{{{content}}}</div>
             </div>
           </div>
@@ -103,6 +101,7 @@
       });
       
       window.onload = function () {
+      //$(document).ready(function () {
         //var source   = $("#rss-list").html();
         var source = document.getElementById("rss-list").innerHTML;
         var template = Handlebars.compile(source);
@@ -110,13 +109,14 @@
           //Тут редактируем список каналов новостей.
             {channelName: "ЦензорНЕТ", channelUrl: "http://censor.net.ua/includes/news_ru.xml"},
             {channelName: "Українська правда", channelUrl: "http://www.pravda.com.ua/rus/rss"},
-            //{channelName: "", channelUrl: ""},           
+            //{channelName: "", channelUrl: ""},
             {channelName: "Дзеркало тиждня", channelUrl: "http://dt.ua/rss/"},
             {channelName: "Сегодня UA", channelUrl: "http://www.segodnya.ua/xml/rss/specials.html"},            
             {channelName: "Апостроф", channelUrl: "http://apostrophe.com.ua/site/allfeed"},
             {channelName: "Аргумент", channelUrl: "http://argumentua.com/export.xml"},
             {channelName: "Корреспондент", channelUrl: "http://k.img.com.ua/rss/ua/all_news2.0.xml"},
             {channelName: "Подробности", channelUrl: "http://podrobnosti.ua/rss/feed/?category=all-news"},
+            {channelName: "Гордон", channelUrl: "http://gordonua.com/html/gosocial/6.html"},
             {channelName: "Новости Одессы", channelUrl: "http://odessa-life.od.ua/gue/rssfeednews"},
             
             {channelName: "Новая газета", channelUrl: "http://www.novayagazeta.ru/rss/all.xml"},
@@ -130,16 +130,20 @@
       };
       
       function show (channel) {
-        $("body").css("cursor", "progress");
+        $("html, body, table").css("cursor", "progress");
+        $("html, body, table").fadeTo( "fast", 0.7 );
+        
         $.ajax({
           url : 'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=50&callback=?&q=' + encodeURIComponent(channel.channelUrl),
           dataType : 'json',
           complete: function (xhr, textStatus) {
             //alert(xhr.status);
             //alert(textStatus);
-            $("body").css("cursor", "default");
+            $("html, body, table").fadeTo( "fast", 1 );
+            $("html, body, table").css("cursor", "default");
           },
           error: function (xhr, ajaxOptions, thrownError) {
+            alert("Помылка")
             alert(xhr.status);
             alert(ajaxOptions);
             alert(thrownError);
@@ -154,9 +158,9 @@
               var channelContent = document.getElementById("channelContent");
               channelContent.innerHTML = template(feeds);
               
-              $('html, body').animate({
+              $("html, body").animate({
                 scrollTop: ($("#channelContent").offset().top - 6)
-              }, 300);
+              }, "slow");
               
               /*
               $.each(data.responseData.feed.entries, function (i, e) {
@@ -181,24 +185,16 @@
         });
       };
       
-      function showItem (id) {
-        //console.log($(id).is(':visible'));
-        //console.log($(id));
-        /*
-        if ($(id).is(':visible')) {
-          $(id).hide(150);
-        } else {
-          $(id).show(150);
-        }
-        */
+      function showItem (id) {        
         var element = $(id);
+        //element.toggle();
         if (element.is(':visible')) {
+        
           //$(window).scrollTop(element.parent().offset().top);
           //var top_of_element = $("#element").offset().top;
           //var bottom_of_element = $("#element").offset()top + $("#element").outerHeight;
           //var bottom_of_screen = $(window).scrollTop() + $(window).height();
           //if((bottom_of_screen > top_of_element) && (bottom_of_screen < bottom_of_element)){
-          
           //console.log($(window).scrollTop());
           //console.log(element.parent().offset().top);
           
@@ -207,12 +203,48 @@
                 scrollTop: (element.parent().offset().top - 6)
             }, 150);
           }
-          element.hide(150);
+          //element.hide(150);
+           element.slideUp(300);
         } else {
-          element.show(150);
+          //element.show(150);
+          element.slideDown(300, function() {
+            // Animation complete.
+            var bottom_of_element = element.parent().offset().top + element.parent().outerHeight();
+            var bottom_of_screen = $(window).scrollTop() + $(window).height();
+            
+            //alert('bottom_of_element ' + bottom_of_element);
+            //alert('bottom_of_screen ' + bottom_of_screen);
+            //alert('$(window).height() ' + $(window).height());
+            //alert('element.parent().outerHeight() ' + element.parent().outerHeight());
+            
+            /*
+            if ((bottom_of_screen < bottom_of_element) && (element.parent().outerHeight() <= $(window).height())) {
+                $('html, body').animate({
+                  scrollTop: (element.parent().offset().top - $(window).height() + element.parent().outerHeight() + 6)
+                }, 150);
+            } else {
+              if (element.parent().outerHeight() >= $(window).height()) {
+                $('html, body').animate({
+                    scrollTop: (element.parent().offset().top - 6)
+                  }, 150);
+              }
+            }
+            */
+            if (element.parent().outerHeight() <= $(window).height()) {
+              if (bottom_of_screen < bottom_of_element) { 
+                $('html, body').animate({
+                  scrollTop: (element.parent().offset().top - $(window).height() + element.parent().outerHeight() + 6)
+                }, 150);
+              }
+            } else {
+              $('html, body').animate({
+                  scrollTop: (element.parent().offset().top - 6)
+                }, 150);
+            }
+            
+            
+          });
         }
-        //element.parent().focus();
-        //panel-body-{{@index}}
       }
       
       function myEventHandler(e)
