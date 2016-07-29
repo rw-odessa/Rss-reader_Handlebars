@@ -195,7 +195,14 @@
       function showItem (id) {        
         var element = $(id);
         //alert(element.css("font-size"));
+        
         if (element.is(':visible')) {
+          
+          var selection = window.getSelection();
+          if (selection.toString().length !== 0) {
+            return;
+          }
+        
           if ($(window).scrollTop() > element.parent().offset().top) {
             $('html, body').animate({
                 scrollTop: (element.parent().offset().top - 6)
