@@ -53,7 +53,7 @@
                   <strong>Автор: </strong>{{author}}
                 </div>
               {{/if}}
-              <a href="{{link}}" title="{{link}}" target="_blank" onclick="myEventHandler()">{{title}}</a>
+              <a href="{{link}}" title="{{link}}" target="_blank" onclick="myEventHandler()" ondblclick="myEventHandler()">{{title}}</a>
               <div id="content-{{@index}}" style="display:none">{{{content}}}</div>
             </div>
           </div>
@@ -234,19 +234,17 @@
         }
       }
       
-      function myEventHandler(e)
-      {
-          if (!e)
-            e = window.event;
-
-          //IE9 & Other Browsers
-          if (e.stopPropagation) {
-            e.stopPropagation();
-          }
-          //IE8 and Lower
-          else {
-            e.cancelBubble = true;
-          }
+      function myEventHandler(e) {
+        if (!e) e = window.event;
+        //IE9 & Other Browsers
+        if (e.stopPropagation) {
+          e.stopPropagation();
+        }
+        //IE8 and Lower
+        else {
+          e.cancelBubble = true;
+        }
+        return false;
       }
       
     </script>
