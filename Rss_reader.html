@@ -147,10 +147,9 @@
               .css("cursor", "default");
           },
           error: function (xhr, ajaxOptions, thrownError) {
-            alert("Помылка")
-            alert(xhr.status);
-            alert(ajaxOptions);
-            alert(thrownError);
+            alert("Сталася помилка - " + xhr.status + " " + xhr.statusText);
+            //alert(ajaxOptions);
+            //alert(thrownError);
           },
           success : function (data) {
             if (data.responseData.feed && data.responseData.feed.entries) {
