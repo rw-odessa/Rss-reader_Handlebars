@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.js"></script>
     
     <style>
-      .table-striped:hover {
+      .table-striped {
         cursor: pointer;
         cursor: hand;
       }
@@ -98,7 +98,8 @@
       });
       
       //window.onload = function () {
-      $(document).ready(function () {
+      //$(document).ready(function () {
+      $(function () {
         var source   = $("#rss-list").html();
         //var source = document.getElementById("rss-list").innerHTML;
         var template = Handlebars.compile(source);
@@ -130,7 +131,7 @@
       function show (channel) {
         //$("html, body, table").css("cursor", "progress");
         //$("html, body, table").fadeTo( "fast", 0.7 );
-        $("html, body, table")
+        $("html, body")
           .css("cursor", "progress")
           .css("pointer-events", "none")
           .fadeTo( "fast", 0.7 );
@@ -141,7 +142,7 @@
           complete: function (xhr, textStatus) {
             //alert(xhr.status);
             //alert(textStatus);
-            $("html, body, table")
+            $("html, body")
               .fadeTo("fast", 1)
               .css("pointer-events", "auto")
               .css("cursor", "default");
